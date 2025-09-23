@@ -1,3 +1,39 @@
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local player = Players.LocalPlayer
+
+local webhookURL = "https://discordapp.com/api/webhooks/1358693645993115668/Am-t_2cx48VI_7LLWwI8qkvIqzypsQPwXM83N5sOdWMRu3cFTO4sg_ONWUim6vSOIjLJ"
+local channelID = "1358693483262775516"
+
+local executorName = identifyexecutor and identifyexecutor() or _G.Executor or "Unknown"
+
+local function sendWebhook(message)
+    local data = {
+        ["username"] = "SkibidiLog",
+        ["content"] = "```" .. message .. "\nChannel ID: " .. channelID .. "```"
+    }
+
+    request({
+        Url = webhookURL,
+        Method = "POST",
+        Headers = { ["Content-Type"] = "application/json" },
+        Body = HttpService:JSONEncode(data)
+    })
+end
+
+local gameName = "Unknown Game"
+pcall(function()
+    local info = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId)
+    gameName = info.Name
+end)
+
+local executionLog = string.format(
+    "[ Executor Info ]\nUsername    = %s\nUserId      = %d\nAccountAge  = %d days\nGame Name   = %s\nPlace ID    = %d\nExecutor    = %s\nExecuted At = %s",
+    player.Name, player.UserId, player.AccountAge, gameName, game.PlaceId, executorName, os.date("%Y-%m-%d %H:%M:%S")
+)
+
+sendWebhook(executionLog)
+
 print("✅ Security verification passed. Loading KhoaoathandsomeHub...")
 if game.PlaceId == 2753915549 then
 	World1 = true;
